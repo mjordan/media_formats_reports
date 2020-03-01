@@ -1,0 +1,7 @@
+name: 'Media Formats Reports'
+description: "Provides reports on the media formats."
+type: module
+package: Media
+core: 8.x
+dependencies:
+  - search_api

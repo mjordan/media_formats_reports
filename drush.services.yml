@@ -1,0 +1,5 @@
+services:
+  media_formats_reports.commands:
+    class: \Drupal\media_formats_reports\Commands\MediaFormatsReportsCommands
+    tags:
+      - { name: drush.command }

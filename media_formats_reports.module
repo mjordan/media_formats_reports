@@ -1,0 +1,64 @@
+<?php
+
+/**
+ * @file
+ * Contains the media_formats_reports.module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function media_formats_reports_theme($existing, $type, $theme, $path) {
+  return [
+    'media_formats_reports_chart' => [
+      'variables' => [],
+    ],
+  ];
+}
+
+/**
+ * Default preprocessor function for the media_formats_reports_theme hook.
+ */
+function template_preprocess_media_formats_reports_chart(&$variables) {
+  $variables['attributes'] = [
+    'id' => ['media_formats_reports_chart'],
+  ];
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function media_formats_reports_page_attachments(array &$attachments) {
+  // $config = \Drupal::config('islandora_riprap.settings');
+  $current_path = \Drupal::service('path.current')->getPath();
+
+  if ($current_path == '/admin/reports/media_formats') {
+    $pie_chart_data = media_formats_reports_get_data();
+    $attachments['#attached']['library'][] = 'media_formats_reports/media_formats_reports_chart';
+    $attachments['#attached']['drupalSettings']['media_formats_reports']['chart_data'] = $pie_chart_data;
+  }
+}
+
+/**
+ * @return object
+ *   A Chart.js dataset object.
+ */
+function media_formats_reports_get_data() {
+  $database = \Drupal::database();
+  // This query gets all media, not just Original Files.
+  $query = $database->query("SELECT field_mime_type_value AS mt, count(field_mime_type_value) AS c FROM {media__field_mime_type} GROUP BY field_mime_type_value");
+  $result = $query->fetchAll();
+  $labels = [];
+  $values = [];
+  foreach ($result as $format) {
+    $labels[] = $format->mt;
+    $values[] = $format->c;
+  }
+  $dataset = new StdClass();
+  $dataset->data = $values;
+  $pie_chart_data = array(
+    'labels' => $labels,
+    'datasets' =>  array($dataset),
+  );
+  return $pie_chart_data;
+}
