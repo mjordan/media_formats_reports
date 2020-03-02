@@ -54,11 +54,34 @@ function media_formats_reports_get_data() {
     $labels[] = $format->mt;
     $values[] = $format->c;
   }
+  $num_formats = count($result);
+  $colors = media_formats_reports_get_chart_colors($num_formats);
   $dataset = new StdClass();
   $dataset->data = $values;
+  $dataset->backgroundColor =  media_formats_reports_get_chart_colors($num_formats);
   $pie_chart_data = array(
     'labels' => $labels,
     'datasets' =>  array($dataset),
   );
   return $pie_chart_data;
+}
+
+/**
+ * Generate a set of random colors to use in the pie chart.
+ *
+ * @param int $length
+ *   The length of the array to generate.
+ *
+ * @return array
+ */
+function media_formats_reports_get_chart_colors($length) {
+  $background_colors = [];
+  for ($i = 1; $i <= $length; $i++) {
+    $rgb_color = []; 
+    foreach (['r', 'g', 'b'] as $color) {
+      $rgb_color[$color] = mt_rand(0, 255);
+    }
+    $background_colors[] = 'rgba(' . implode(',', $rgb_color) . ')';
+  }
+  return $background_colors;
 }
