@@ -2,6 +2,6 @@ media_formats_reports.report:
   path: '/admin/reports/media_formats'
   defaults:
     _controller: '\Drupal\media_formats_reports\Controller\MediaFormatsReportsController::main'
-    _title: 'Media Formats'
+    _title: 'Media Grouped by Mimetype'
   requirements:
     _permission: 'administer site configuration'

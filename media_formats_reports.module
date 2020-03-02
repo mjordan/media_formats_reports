@@ -29,7 +29,7 @@ function template_preprocess_media_formats_reports_chart(&$variables) {
  * Implements hook_page_attachments().
  */
 function media_formats_reports_page_attachments(array &$attachments) {
-  // $config = \Drupal::config('islandora_riprap.settings');
+  // $config = \Drupal::config('media_formats_reports.settings');
   $current_path = \Drupal::service('path.current')->getPath();
 
   if ($current_path == '/admin/reports/media_formats') {
@@ -45,8 +45,10 @@ function media_formats_reports_page_attachments(array &$attachments) {
  */
 function media_formats_reports_get_data() {
   $database = \Drupal::database();
-  // This query gets all media, not just Original Files.
-  $query = $database->query("SELECT field_mime_type_value AS mt, count(field_mime_type_value) AS c FROM {media__field_mime_type} GROUP BY field_mime_type_value");
+  // This query gets Original Files (tid 17) and Preservation Masters (tid 18).
+  $media_use_term_ids = '17,18';
+  // $query = $database->query("SELECT field_mime_type_value AS mt, count(field_mime_type_value) AS c FROM {media__field_mime_type}, {media__field_media_use} WHERE {media__field_mime_type}.bundle = {media__field_media_use}.bundle AND {media__field_media_use}.entity_id = {media__field_mime_type}.entity_id AND {media__field_mime_type}.entity_id = {media__field_mime_type}.revision_id AND {media__field_media_use}.field_media_use_target_id IN (:tids) GROUP BY field_mime_type_value", [':tids' => $media_use_term_ids]);
+  $query = $database->query("SELECT field_mime_type_value AS mt, count(field_mime_type_value) AS c FROM {media__field_mime_type}, {media__field_media_use} WHERE {media__field_mime_type}.bundle = {media__field_media_use}.bundle AND {media__field_media_use}.entity_id = {media__field_mime_type}.entity_id AND {media__field_media_use}.field_media_use_target_id IN (:tids) GROUP BY field_mime_type_value", [':tids' => $media_use_term_ids]);
   $result = $query->fetchAll();
   $labels = [];
   $values = [];
@@ -58,7 +60,7 @@ function media_formats_reports_get_data() {
   $colors = media_formats_reports_get_chart_colors($num_formats);
   $dataset = new StdClass();
   $dataset->data = $values;
-  $dataset->backgroundColor =  media_formats_reports_get_chart_colors($num_formats);
+  $dataset->backgroundColor = media_formats_reports_get_chart_colors($num_formats);
   $pie_chart_data = array(
     'labels' => $labels,
     'datasets' =>  array($dataset),
@@ -73,15 +75,17 @@ function media_formats_reports_get_data() {
  *   The length of the array to generate.
  *
  * @return array
+ *    An array of RGB values in the format required by Chart.js, e.g.,
+ *    array('rgba(255, 99, 132)', 'rgba(54, 162, 235)', 'rgba(255, 206, 86)').
  */
 function media_formats_reports_get_chart_colors($length) {
-  $background_colors = [];
+  $colors = [];
   for ($i = 1; $i <= $length; $i++) {
     $rgb_color = []; 
     foreach (['r', 'g', 'b'] as $color) {
-      $rgb_color[$color] = mt_rand(0, 255);
+      $rgb_color[$color] = rand(0, 255);
     }
-    $background_colors[] = 'rgba(' . implode(',', $rgb_color) . ')';
+    $colors[] = 'rgba(' . implode(',', $rgb_color) . ')';
   }
-  return $background_colors;
+  return $colors;
 }
