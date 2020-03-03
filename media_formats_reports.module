@@ -54,7 +54,8 @@ function media_formats_reports_get_data() {
 
   if ($report_type == 'mimetype') {
     // This query gets Original Files (tid 17) and Preservation Masters (tid 18).
-    $media_use_term_ids = '17,18';
+    $config = \Drupal::config('media_formats_reports.settings');
+    $media_use_term_ids = $config->get('media_formats_reports_media_use_terms');
     $query = $database->query("SELECT field_mime_type_value AS f, count(field_mime_type_value) AS c FROM {media__field_mime_type}, {media__field_media_use} WHERE {media__field_mime_type}.bundle = {media__field_media_use}.bundle AND {media__field_media_use}.entity_id = {media__field_mime_type}.entity_id AND {media__field_media_use}.field_media_use_target_id IN (:tids) GROUP BY field_mime_type_value", [':tids' => $media_use_term_ids]);
   }
   if ($report_type == 'puid') {

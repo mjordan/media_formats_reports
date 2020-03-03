@@ -12,6 +12,10 @@ Users with "Administer Site Configuration" can visit the reports page from Drupa
 
 If Islandora FITS is installed, users can choose "PUID" from the "Report type" list.
 
+## Configuration
+
+To use the MIME type report, you need to configure the term IDs from the Islandora Media Use vocabulary that you want in the report. To do this, go to "Admin > Media > Media Formats Reports settings".
+
 ## Requirements
 
 * [Islandora 8](https://github.com/Islandora/islandora)

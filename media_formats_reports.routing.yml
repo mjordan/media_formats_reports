@@ -1,3 +1,10 @@
+media_formats_reports.admin_settings:
+  path: '/admin/config/media/media_formats_reports'
+  defaults:
+    _form: '\Drupal\media_formats_reports\Plugin\Form\MediaFormatsReportsSettingsForm'
+    _title: 'Media Formats Reports'
+  requirements:
+    _permission: 'administer site configuration'
 media_formats_reports.report:
   path: '/admin/reports/media_formats'
   defaults:
