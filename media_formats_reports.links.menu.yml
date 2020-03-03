@@ -1,7 +1,7 @@
 media_formats_reports.admin_settings:
   title: 'Media Formats Reports settings'
   description: 'Configure the Media Formats Reports settings.'
-  parent: system.admin_config_media
+  parent: system.admin_config_islandora
   route_name: media_formats_reports.admin_settings
 media_formats_reports.report:
   title: 'Media Formats'
