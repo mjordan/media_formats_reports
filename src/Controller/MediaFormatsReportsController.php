@@ -18,7 +18,9 @@ class MediaFormatsReportsController extends ControllerBase {
    *   Themed markup used by the chart.
    */
   public function main() {
+    $form = \Drupal::formBuilder()->getForm('Drupal\media_formats_reports\Plugin\Form\MediaFormatsReportsReportSelectorForm');
     return [
+      '#form' => $form,
       '#theme' => 'media_formats_reports_chart',
     ];
   }

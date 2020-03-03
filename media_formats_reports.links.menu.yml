@@ -1,0 +1,5 @@
+media_formats_reports.report:
+  title: 'Media Formats'
+  parent: system.admin_reports
+  description: 'Get report on media by format.'
+  route_name: media_formats_reports.report

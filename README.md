@@ -2,17 +2,20 @@
 
 ## Introduction
 
-A Drupal 8 module to provide a visual report (chart) showing the frequency of formats (currently only Mime Type) used.
+A Drupal 8 module to provide a visual report (chart) showing the frequency of formats using either MIME type or, if Islandora FITS is installed, [PRONOM PUID](https://en.wikipedia.org/wiki/PRONOM).
 
 ## Overview
 
-Currently not even "hello world" is working. Please come back later.
+Users with "Administer Site Configuration" can visit the reports page from Drupal's Reports list. The link to "Media Formats" will show the default MIME type report:
 
-Go to `admin/reports/media_formats` to see a chart.
+![MIME type report](docs/images/media_report.png)
+
+If Islandora FITS is installed, users can choose "PUID" from the "Report type" list.
 
 ## Requirements
 
 * [Islandora 8](https://github.com/Islandora/islandora)
+* [Islandora FITS](https://github.com/Islandora/islandora)
 
 ## Installation
 
