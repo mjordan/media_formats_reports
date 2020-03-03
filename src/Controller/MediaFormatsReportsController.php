@@ -24,4 +24,5 @@ class MediaFormatsReportsController extends ControllerBase {
       '#theme' => 'media_formats_reports_chart',
     ];
   }
+
 }

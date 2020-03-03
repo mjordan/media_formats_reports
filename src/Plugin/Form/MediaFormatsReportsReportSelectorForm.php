@@ -10,7 +10,6 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class MediaFormatsReportsReportSelectorForm extends FormBase {
 
-
   /**
    * {@inheritdoc}
    */
@@ -33,7 +32,7 @@ class MediaFormatsReportsReportSelectorForm extends FormBase {
       '#type' => 'select',
       '#title' => $this->t('Report type'),
       '#default_value' => $report_type,
-      '#options' => ['mimetype' => 'MIME type', 'puid' => 'PRONOM PUID']
+      '#options' => ['mimetype' => 'MIME type', 'puid' => 'PRONOM PUID'],
     ];
     $form['actions']['submit'] = [
       '#type' => 'submit',

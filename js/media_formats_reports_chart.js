@@ -1,4 +1,4 @@
-/*
+/**
 @file
 Javascript that renders a Chart.js line chart.
 */
@@ -21,7 +21,7 @@ Javascript that renders a Chart.js line chart.
           }
         }
       }
-    });	  
+    });
   }
 
-}) (Drupal, jQuery);
+})(Drupal, jQuery);
