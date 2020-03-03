@@ -15,7 +15,7 @@ If Islandora FITS is installed, users can choose "PUID" from the "Report type" l
 ## Requirements
 
 * [Islandora 8](https://github.com/Islandora/islandora)
-* [Islandora FITS](https://github.com/Islandora/islandora)
+* [Islandora FITS](https://github.com/roblib/islandora_fits) is required if you want to generate the PUID report.
 
 ## Installation
 
