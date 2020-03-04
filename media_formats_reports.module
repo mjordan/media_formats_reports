@@ -48,38 +48,56 @@ function media_formats_reports_get_data() {
   if ($tempstore = \Drupal::service('user.private_tempstore')->get('media_formats_reports')) {
     $report_type = $tempstore->get('media_formats_reports_report_type');
   }
+  elseif (is_null($report_type)) {
+    $report_type = 'mimetype';
+  }
   else {
     $report_type = 'mimetype';
   }
 
+  // See https://github.com/mjordan/media_formats_reports/issues/2.
+  // If we move to pluggable query back ends, each would need to return
+  // an assocative array containing formatlabel => count members ($format_counts below).
   if ($report_type == 'mimetype') {
-    // This query gets Original Files (tid 17) and Preservation Masters (tid 18).
     $config = \Drupal::config('media_formats_reports.settings');
-    $media_use_term_ids = $config->get('media_formats_reports_media_use_terms');
-    $query = $database->query("SELECT field_mime_type_value AS f, count(field_mime_type_value) AS c FROM {media__field_mime_type}, {media__field_media_use} WHERE {media__field_mime_type}.bundle = {media__field_media_use}.bundle AND {media__field_media_use}.entity_id = {media__field_mime_type}.entity_id AND {media__field_media_use}.field_media_use_target_id IN (:tids) GROUP BY field_mime_type_value", [':tids' => $media_use_term_ids]);
-  }
-  if ($report_type == 'puid') {
-    // DROID PUID. Notice we don't link to media, we just get all the unique values in the db table.
-    $module_handler = \Drupal::service('module_handler');
-    if ($module_handler->moduleExists('islandora_fits')) {
-      $query = $database->query("SELECT fits_droid_puid_value AS f, count(fits_droid_puid_value) AS c FROM media__fits_droid_puid GROUP BY fits_droid_puid_value");
+    $media_use_term_ids = explode(',', $config->get('media_formats_reports_media_use_terms'));
+    $entity_type_manager = \Drupal::service('entity_type.manager');
+    $media_storage = $entity_type_manager->getStorage('media');
+    $result = $media_storage->getAggregateQuery()
+      ->groupBy('field_mime_type')
+      ->aggregate('field_mime_type', 'COUNT')
+      ->condition('field_media_use', $media_use_term_ids, 'IN')
+      ->execute();
+    $format_counts = [];
+    foreach ($result as $format) {
+      $format_counts[$format['field_mime_type']] = $format['field_mime_type_count'];
     }
   }
 
-  $result = $query->fetchAll();
-  $labels = [];
-  $values = [];
-  foreach ($result as $format) {
-    $labels[] = $format->f;
-    $values[] = $format->c;
+  if ($report_type == 'puid') {
+    // DROID PUID. In this case we don't include a condition, we just get all the unique values in the db table.
+    $entity_type_manager = \Drupal::service('entity_type.manager');
+    $media_storage = $entity_type_manager->getStorage('media');
+    $result = $media_storage->getAggregateQuery()
+      ->groupBy('fits_droid_puid')
+      ->aggregate('fits_droid_puid', 'COUNT')
+      ->execute();
+    $format_counts = [];
+    foreach ($result as $format) {
+      if (strlen($format['fits_droid_puid_value'])) {
+        $format_counts[$format['fits_droid_puid_value']] = $format['fits_droid_puid_count'];
+      }
+    }
   }
-  $num_formats = count($result);
+
+  // Populate the Chart.js dataset object.
+  $num_formats = count($format_counts);
   $colors = media_formats_reports_get_chart_colors($num_formats);
   $dataset = new StdClass();
-  $dataset->data = $values;
+  $dataset->data = array_values($format_counts);
   $dataset->backgroundColor = media_formats_reports_get_chart_colors($num_formats);
   $pie_chart_data = array(
-    'labels' => $labels,
+    'labels' => array_keys($format_counts),
     'datasets' =>  array($dataset),
   );
   return $pie_chart_data;

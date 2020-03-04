@@ -36,7 +36,7 @@ class MediaFormatsReportsReportSelectorForm extends FormBase {
     ];
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Submit'),
+      '#value' => $this->t('Go'),
     ];
 
     return $form;
