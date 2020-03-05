@@ -25,10 +25,10 @@ class Flavors implements MediaFormatsReportsDataSourceInterface{
    * @return array
    *   An assocative array containing formatlabel => count members. 
    *
-   *   The data returned by this sample method is hard-coded, but
-   *   it could come from a specific field on Media (see the MIME Type,
-   *   and PRONOM PUID plugins for examples of how to do that), from
-   *   a Solr query, or from some other data source.
+   *   The data returned by this sample method is hard-coded, but the
+   *   data in a custom plugin could come from a specific field on
+   *   Media (see the MIME Type, and PRONOM PUID plugins for examples
+   *   of how to do that), from a Solr query, or from some other data source.
    */
   public function getData() {
     return [

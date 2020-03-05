@@ -1,3 +1,5 @@
 services:
+  # Service IDs must start with "media_formats_reports.datasource."
+  # for the plugin to show up in the report selection form.
   media_formats_reports.datasource.flavors:
     class: Drupal\sample_media_formats_datasource\Plugin\DataSource\Flavors
