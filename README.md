@@ -26,6 +26,16 @@ To use the MIME type report, you need to configure the term IDs from the Islando
 1. Clone this repo into your Islandora's `drupal/web/modules/contrib` directory.
 1. Enable the module either under the "Admin > Extend" menu or by running `drush en -y media_formats_reports`.
 
+## Writing custom data source plugins
+
+The `modules` subdirectory contains a sample data source plugin. The minimum requirements for a data source plugin are:
+
+1. a .info.yml file
+1. a .services.yml file
+   * Within the .services.yml file, the service ID must be in the form `media_formats_reports.datasource.xxx`, where `xxx` is specific to the plugin. This pattern ensures that the plugin will show up in the list of media formats reports in the select list in the reports form.
+1. a plugin class file that implements the `MediaFormatsReportsDataSourceInterface` interface.
+   * The plugin's `getData()` method needs to return an associative array containing formatname => count members.
+
 ## Current maintainer
 
 * [Mark Jordan](https://github.com/mjordan)

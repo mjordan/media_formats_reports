@@ -1,0 +1,3 @@
+services:
+  media_formats_reports.datasource.flavors:
+    class: Drupal\sample_media_formats_datasource\Plugin\DataSource\Flavors

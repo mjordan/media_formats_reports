@@ -44,7 +44,6 @@ function media_formats_reports_page_attachments(array &$attachments) {
  *   A Chart.js dataset object.
  */
 function media_formats_reports_get_data() {
-  $database = \Drupal::database();
   if ($tempstore = \Drupal::service('user.private_tempstore')->get('media_formats_reports')) {
     $report_type = $tempstore->get('media_formats_reports_report_type');
   }
@@ -55,40 +54,9 @@ function media_formats_reports_get_data() {
     $report_type = 'mimetype';
   }
 
-  // See https://github.com/mjordan/media_formats_reports/issues/2.
-  // If we move to pluggable query back ends, each would need to return
-  // an assocative array containing formatlabel => count members ($format_counts below).
-  if ($report_type == 'mimetype') {
-    $config = \Drupal::config('media_formats_reports.settings');
-    $media_use_term_ids = explode(',', $config->get('media_formats_reports_media_use_terms'));
-    $entity_type_manager = \Drupal::service('entity_type.manager');
-    $media_storage = $entity_type_manager->getStorage('media');
-    $result = $media_storage->getAggregateQuery()
-      ->groupBy('field_mime_type')
-      ->aggregate('field_mime_type', 'COUNT')
-      ->condition('field_media_use', $media_use_term_ids, 'IN')
-      ->execute();
-    $format_counts = [];
-    foreach ($result as $format) {
-      $format_counts[$format['field_mime_type']] = $format['field_mime_type_count'];
-    }
-  }
-
-  if ($report_type == 'puid') {
-    // DROID PUID. In this case we don't include a condition, we just get all the unique values in the db table.
-    $entity_type_manager = \Drupal::service('entity_type.manager');
-    $media_storage = $entity_type_manager->getStorage('media');
-    $result = $media_storage->getAggregateQuery()
-      ->groupBy('fits_droid_puid')
-      ->aggregate('fits_droid_puid', 'COUNT')
-      ->execute();
-    $format_counts = [];
-    foreach ($result as $format) {
-      if (strlen($format['fits_droid_puid_value'])) {
-        $format_counts[$format['fits_droid_puid_value']] = $format['fits_droid_puid_count'];
-      }
-    }
-  }
+  $data_source_service_id = 'media_formats_reports.datasource.' . $report_type;
+  $data_source = \Drupal::service($data_source_service_id);
+  $format_counts = $data_source->getData();
 
   // Populate the Chart.js dataset object.
   $num_formats = count($format_counts);
