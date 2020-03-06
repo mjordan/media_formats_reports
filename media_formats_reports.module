@@ -77,10 +77,10 @@ function media_formats_reports_get_data() {
   // Write out a CSV for download.
   if ($tempstore->get('media_formats_reports_generate_csv')) {
     $files_path = \Drupal::service('file_system')->realpath(file_default_scheme() . "://");
-    $csv_data = [
-      array_keys($format_counts),
-      array_values($format_counts),
-    ];
+    $csv_data = [['Format', 'Count']];
+    foreach ($format_counts as $format => $count) {
+      $csv_data[] = [$format, $count];
+    }
     $fp = fopen($files_path . '/media_types.csv', 'w');
     foreach ($csv_data as $fields) {
       fputcsv($fp, $fields);
