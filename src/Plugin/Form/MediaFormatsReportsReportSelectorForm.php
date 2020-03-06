@@ -32,8 +32,11 @@ class MediaFormatsReportsReportSelectorForm extends FormBase {
       '#type' => 'select',
       '#title' => $this->t('Report type'),
       '#default_value' => $report_type,
-      // '#options' => ['mimetype' => 'MIME type', 'puid' => 'PRONOM PUID'],
       '#options' => $this->getServices(),
+    ];
+    $form['media_formats_reports_generate_csv'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Generate a CSV file of this data'),
     ];
     $form['actions']['submit'] = [
       '#type' => 'submit',
@@ -61,6 +64,7 @@ class MediaFormatsReportsReportSelectorForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $tempstore = \Drupal::service('user.private_tempstore')->get('media_formats_reports');
     $tempstore->set('media_formats_reports_report_type', $form_state->getValue('media_formats_reports_report_type'));
+    $tempstore->set('media_formats_reports_generate_csv', $form_state->getValue('media_formats_reports_generate_csv'));
   }
 
   /**

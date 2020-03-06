@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Url;
+
 /**
  * @file
  * Contains the media_formats_reports.module.
@@ -11,7 +13,7 @@
 function media_formats_reports_theme($existing, $type, $theme, $path) {
   return [
     'media_formats_reports_chart' => [
-      'variables' => ['form' => null],
+      'variables' => ['form' => null, 'show_csv_link' => null],
     ],
   ];
 }
@@ -23,15 +25,18 @@ function template_preprocess_media_formats_reports_chart(&$variables) {
   $variables['attributes'] = [
     'id' => ['media_formats_reports_chart'],
   ];
+  if ($variables['show_csv_link']) {
+    $files_path = \Drupal::service('file_system')->realpath(file_default_scheme() . "://");
+    $report_url = file_create_url(file_default_scheme() . "://media_types.csv");
+    $variables['csv_url'] = $report_url;
+  }
 }
 
 /**
  * Implements hook_page_attachments().
  */
 function media_formats_reports_page_attachments(array &$attachments) {
-  // $config = \Drupal::config('media_formats_reports.settings');
   $current_path = \Drupal::service('path.current')->getPath();
-
   if ($current_path == '/admin/reports/media_formats') {
     $pie_chart_data = media_formats_reports_get_data();
     $attachments['#attached']['library'][] = 'media_formats_reports/media_formats_reports_chart';
@@ -68,6 +73,24 @@ function media_formats_reports_get_data() {
     'labels' => array_keys($format_counts),
     'datasets' =>  array($dataset),
   );
+
+  // Write out a CSV for download.
+  if ($tempstore->get('media_formats_reports_generate_csv')) {
+    $files_path = \Drupal::service('file_system')->realpath(file_default_scheme() . "://");
+    $csv_data = [
+      array_keys($format_counts),
+      array_values($format_counts),
+    ];
+    $fp = fopen($files_path . '/media_types.csv', 'w');
+    foreach ($csv_data as $fields) {
+      fputcsv($fp, $fields);
+    }
+    fclose($fp);
+  }
+
+  // We're finished with this session variable, so clear it for
+  // the next rendering of the report page.
+  $tempstore->delete('media_formats_reports_generate_csv');
   return $pie_chart_data;
 }
 
