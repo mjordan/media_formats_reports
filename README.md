@@ -12,6 +12,8 @@ Users with "Administer Site Configuration" can visit the reports page from Drupa
 
 If Islandora FITS is installed, users can choose "PUID" from the "Report type" list.
 
+Checking the "Generate a CSV file of this data" box and clicking the "Go" button will provide a link to download the CSV file.
+
 ## Configuration
 
 To use the MIME type report, you need to configure the term IDs from the Islandora Media Use vocabulary that you want in the report. To do this, go to "Admin > Configuration > Islandora > Media Formats Reports settings".
