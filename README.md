@@ -16,6 +16,14 @@ If Islandora FITS is installed, users can choose "PUID" from the "Report type" l
 
 To use the MIME type report, you need to configure the term IDs from the Islandora Media Use vocabulary that you want in the report. To do this, go to "Admin > Configuration > Islandora > Media Formats Reports settings".
 
+## Pregenerating report data
+
+This module comes with a set of Drush commands that generates the data used in the reports and caches it:
+
+1. To list the enabled services that generate report data: `drush media_formats_reports:list_report_types`
+1. To pregenerate the data for the 'puid' report: `drush media_formats_reports:build_cache puid`
+1. To delete the data for the 'mimetype' report: `media_formats_reports:delete_cache mimetype`
+
 ## Requirements
 
 * [Islandora 8](https://github.com/Islandora/islandora)

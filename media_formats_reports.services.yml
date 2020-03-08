@@ -1,4 +1,8 @@
 services:
+  media_formats_reports.utilities:
+    class: Drupal\media_formats_reports\Utils
+
+  # Datasource services.
   media_formats_reports.datasource.mimetype:
     class: Drupal\media_formats_reports\Plugin\DataSource\MimeType
   media_formats_reports.datasource.puid:

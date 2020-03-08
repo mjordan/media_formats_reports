@@ -59,9 +59,17 @@ function media_formats_reports_get_data() {
     $report_type = 'mimetype';
   }
 
-  $data_source_service_id = 'media_formats_reports.datasource.' . $report_type;
-  $data_source = \Drupal::service($data_source_service_id);
-  $format_counts = $data_source->getData();
+  $format_counts = &drupal_static(__FUNCTION__);
+  $cid = 'media_formats_reports_format_counts_' . $report_type;
+  if ($cache = \Drupal::cache()->get($cid)) {
+    $format_counts = $cache->data;
+  }
+  else {
+    $data_source_service_id = 'media_formats_reports.datasource.' . $report_type;
+    $data_source = \Drupal::service($data_source_service_id);
+    $format_counts = $data_source->getData();
+    \Drupal::cache()->set($cid, $format_counts);
+  }
 
   // Populate the Chart.js dataset object.
   $num_formats = count($format_counts);

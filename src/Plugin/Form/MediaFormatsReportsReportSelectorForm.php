@@ -28,11 +28,14 @@ class MediaFormatsReportsReportSelectorForm extends FormBase {
       $report_type = 'mimetype';
     }
 
+    $utilities = \Drupal::service('media_formats_reports.utilities');
+    $services = $utilities->getServices();
+
     $form['media_formats_reports_report_type'] = [
       '#type' => 'select',
       '#title' => $this->t('Report type'),
       '#default_value' => $report_type,
-      '#options' => $this->getServices(),
+      '#options' => $services,
     ];
     $form['media_formats_reports_generate_csv'] = [
       '#type' => 'checkbox',
@@ -65,32 +68,6 @@ class MediaFormatsReportsReportSelectorForm extends FormBase {
     $tempstore = \Drupal::service('user.private_tempstore')->get('media_formats_reports');
     $tempstore->set('media_formats_reports_report_type', $form_state->getValue('media_formats_reports_report_type'));
     $tempstore->set('media_formats_reports_generate_csv', $form_state->getValue('media_formats_reports_generate_csv'));
-  }
-
-  /**
-   * Gets a list of data source services that can be used in the report selector form.
-   *
-   * @return array
-   *   Associative array of services.
-   */
-  public function getServices() {
-
-    $container = \Drupal::getContainer();
-    $services = $container->getServiceIds();
-    $services = preg_grep("/media_formats_reports\.datasource\./", $services);
-
-    $module_handler = \Drupal::service('module_handler');
-    if (!$module_handler->moduleExists('islandora_fits')) {
-      unset($services['puid']);
-    }
-
-    $options = [];
-    foreach ($services as $service_id) {
-      $service = \Drupal::service($service_id);
-      $service_id = preg_replace('/^.*datasource\./', '', $service_id);
-      $options[$service_id] = $service->getName();
-    }
-    return $options;
   }
 
 }
