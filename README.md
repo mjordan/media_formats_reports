@@ -38,6 +38,8 @@ This module comes with a set of Drush commands that generates the data used in t
 
 ## Writing custom data source plugins
 
+MIME type and PUID are taken from Drupal's database, but other format indicators, or sources for MIME type and PUID (such as Solr, if they are indexed) are possible through alternative data source plugins.
+
 The `modules` subdirectory contains a sample data source plugin. The minimum requirements for a data source plugin are:
 
 1. a .info.yml file
