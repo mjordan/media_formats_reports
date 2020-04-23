@@ -52,10 +52,8 @@ function media_formats_reports_get_data() {
   if ($tempstore = \Drupal::service('user.private_tempstore')->get('media_formats_reports')) {
     $report_type = $tempstore->get('media_formats_reports_report_type');
   }
-  elseif (is_null($report_type)) {
-    $report_type = 'mimetype';
-  }
-  else {
+  // Set safe default value.
+  if (empty($report_type)) {
     $report_type = 'mimetype';
   }
 
