@@ -21,11 +21,13 @@ class Utils {
     $services = $container->getServiceIds();
     $services = preg_grep("/media_formats_reports\.datasource\./", $services);
 
+    // Temporary disable the FITS data source pending https://github.com/mjordan/media_formats_reports/issues/6
+    unset($services['puid']);
     // If the Islandora FITS module is not enabled, don't show the PUID report option.
-    $module_handler = \Drupal::service('module_handler');
-    if (!$module_handler->moduleExists('islandora_fits')) {
-      unset($services['puid']);
-    }
+    // $module_handler = \Drupal::service('module_handler');
+    // if (!$module_handler->moduleExists('islandora_fits')) {
+      // unset($services['puid']);
+    // }
 
     if ($ids_only) {
       $service_ids_to_return = [];

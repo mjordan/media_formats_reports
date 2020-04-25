@@ -5,5 +5,6 @@ services:
   # Datasource services.
   media_formats_reports.datasource.mimetype:
     class: Drupal\media_formats_reports\Plugin\DataSource\MimeType
-  media_formats_reports.datasource.puid:
-    class: Drupal\media_formats_reports\Plugin\DataSource\Puid
+    # Temporarily removed pending https://github.com/mjordan/media_formats_reports/issues/6
+    # media_formats_reports.datasource.puid:
+    # class: Drupal\media_formats_reports\Plugin\DataSource\Puid
