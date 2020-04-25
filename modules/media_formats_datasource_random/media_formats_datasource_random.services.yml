@@ -1,0 +1,3 @@
+services:
+  media_formats_reports.datasource.random:
+    class: Drupal\media_formats_datasource_random\Plugin\DataSource\Random
