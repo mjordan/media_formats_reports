@@ -1,5 +1,7 @@
 # Media Formats Reports
 
+> Note: As of May 9, 2020, this module is deprecated in favor of [Islandora Repository Reports](https://github.com/mjordan/islandora_repository_reports).
+
 ## Introduction
 
 A Drupal 8 module to provide a visual report (chart) showing the frequency of formats using either MIME type or, if Islandora FITS is installed, [PRONOM PUID](https://en.wikipedia.org/wiki/PRONOM).
